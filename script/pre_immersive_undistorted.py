@@ -125,12 +125,14 @@ if __name__ == "__main__" :
     parser = argparse.ArgumentParser()
  
     parser.add_argument("--videopath", default="", type=str)
+    parser.add_argument("--dstpath", default="", type=str)
     parser.add_argument("--startframe", default=0, type=int)
     parser.add_argument("--endframe", default=50, type=int)
 
 
     args = parser.parse_args()
     videopath = Path(args.videopath)
+    dstpath = Path(args.dstpath)
 
     startframe = args.startframe
     endframe = args.endframe
@@ -143,6 +145,9 @@ if __name__ == "__main__" :
     if not videopath.exists():
         print("path not exist")
         quit()
+    if not dstpath.exists():
+        os.mkdir(dstpath)
+
 
     srcscene = videopath.name
     if srcscene not in Immersiveseven:
@@ -159,7 +164,8 @@ if __name__ == "__main__" :
     postfix  = "_undist" # undistored cameras
 
     scene = srcscene + postfix
-    dstpath = videopath.with_name(videopath.name + postfix)
+    dstpath = dstpath.joinpath(videopath.name + postfix)  # the path to save the dataset.
+
     scale = immmersivescaledict[scene]
 
     videoslist = sorted(videopath.glob("*.mp4"))
